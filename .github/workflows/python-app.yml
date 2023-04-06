@@ -8,6 +8,8 @@ on:
     branches:
       - 'main'
       - 'SPRINT-1/**'
+    path:
+      - ".github/workflows/python-app.yml"
   pull_request:
     branches:
       - 'main'
