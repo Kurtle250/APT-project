@@ -20,8 +20,11 @@ class apt_decoder(object):
         self._hilbert()
         self._frame_image()
 
-
-    def display_plot(self):
+    def display_plot(self) -> None:
+        """
+        Displays plot of sampled audio signal
+        :return: None
+        """
         plt.figure(figsize=(12, 4))
         plt.plot(self.data_crop)
         plt.xlabel("Samples")
@@ -29,14 +32,21 @@ class apt_decoder(object):
         plt.title("Signal")
         plt.show()
 
-
-    def _hilbert(self):
+    def _hilbert(self) -> None:
+        """
+        Preforms hilbert filter on AM modulated signal to demodulate the signal
+        to be further decoded and processed
+        :return: None
+        """
         analytical_signal = signal.hilbert(self.data)
         amplitude_envelope = np.abs(analytical_signal)
         self.data = amplitude_envelope
 
-
-    def _frame_image(self):
+    def _frame_image(self) -> None:
+        """
+        Transforms 1D np array in 2D image
+        :return: None
+        """
         frame_width = int(0.5 * self.fs)
         w, h = frame_width, self.data.shape[0] // frame_width
         self.image = Image.new('RGB', (w, h))
@@ -45,7 +55,7 @@ class apt_decoder(object):
             lum = int(self.data[p] // 32 - 32)
             if lum < 0: lum = 0
             if lum > 255: lum = 255
-            self.image.putpixel((px, py), (0, lum, 0))
+            self.image.putpixel((px, py), (lum, lum, lum))
             px += 1
             if px >= w:
                 if (py % 50) == 0:
@@ -54,7 +64,10 @@ class apt_decoder(object):
                 py += 1
                 if py >= h:
                     break
-
     def display_image(self):
+        """
+        Display's image in matplot lib figure
+        :return: None
+        """
         plt.imshow(self.image)
         plt.show()
