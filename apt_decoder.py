@@ -8,7 +8,7 @@ class apt_decoder(object):
     # DSP parameters
     fs, data = None,list()
     data_crop = None
-    data_ = None
+    fc = 2400
     resample = 4
     # image parameters
     image = None
@@ -17,8 +17,9 @@ class apt_decoder(object):
         self.data_crop = self.data[20 * self.fs:21 * self.fs]
         self.data = self.data[::self.resample]
         self.fs = self.fs // self.resample
-        self.hilbert()
-        self.frame_image()
+        self._hilbert()
+        self._frame_image()
+
 
     def display_plot(self):
         plt.figure(figsize=(12, 4))
@@ -29,13 +30,13 @@ class apt_decoder(object):
         plt.show()
 
 
-    def hilbert(self):
+    def _hilbert(self):
         analytical_signal = signal.hilbert(self.data)
         amplitude_envelope = np.abs(analytical_signal)
         self.data = amplitude_envelope
 
 
-    def frame_image(self):
+    def _frame_image(self):
         frame_width = int(0.5 * self.fs)
         w, h = frame_width, self.data.shape[0] // frame_width
         self.image = Image.new('RGB', (w, h))
