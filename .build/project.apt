@@ -1,0 +1,6 @@
+apt-utils
+git
+ca-certificates
+curl
+gnupg
+lsb-release
