@@ -7,13 +7,13 @@ on:
   push:
     branches:
       - 'main'
-      - 'SPRINT-1/**'
+      - 'SPRINT-1_apt-decoder'
     path:
       - ".github/workflows/python-app.yml"
   pull_request:
     branches:
       - 'main'
-      - 'SPRINT-1/**'
+      - 'SSPRINT-1_apt-decoder'
   
 permissions:
   contents: read
