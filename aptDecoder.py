@@ -6,9 +6,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 from PIL import Image
 import json
-from apt_dataclass import apt_dataclass
+from aptDbSchema import apt_data
 
-class AptDecoder(apt_dataclass):
+class AptDecoder(apt_data):
     # DSP parameters
     fs, data = None, list()
     data_crop = None
@@ -83,16 +83,16 @@ class AptDecoder(apt_dataclass):
         plt.imshow(self.img)
         plt.show()
 
-    def save_image(self, id: int) -> None:
+    def save_image(self) -> None:
         """
         Save matplot figure as png
         :return: None
         """
-        self.img_fh = "data/images/"+str(id) + '-' + 'NOAA-19.png'
+        self.img_fh = "data/images/"+ 'NOAA-19.png'
         plt.savefig(self.img_fh)
 
     def parse_wav_fh(self):
         pass
     def generate_json(self):
-        self.json_output = apt_dataclass("2", "HHMMSS", ["XXXX", "XXXX", "XXXX"], "...", self.wav_fh, self.img_fh)
+        self.json_output = apt_data("2", "HHMMSS", ["XXXX", "XXXX", "XXXX"], "...", self.wav_fh, self.img_fh)
         print(json.dumps(self.json_output.aptSchema))

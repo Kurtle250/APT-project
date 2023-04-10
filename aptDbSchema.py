@@ -1,4 +1,4 @@
-class apt_dataclass():
+class apt_data():
     aptSchema = {
         "id": str(),
         "utc_time": str(10),
@@ -8,8 +8,8 @@ class apt_dataclass():
         "image_location": str(128)
     }
 
-    def __init__(self, id: str, date: str, loc: list, desc: str, wav_loc: str, img_loc: str):
-        self.aptSchema["id"] = id
+    def __init__(self, db_id: str, date: str, loc: list, desc: str, wav_loc: str, img_loc: str):
+        self.aptSchema["id"] = db_id
         self.aptSchema["utc_time"] = date
         self.aptSchema["location"] = loc
         self.aptSchema["description"] = desc
