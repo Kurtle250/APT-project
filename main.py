@@ -7,6 +7,7 @@ def main():
     #app.display_plot()
     app.display_image()
     app.save_image(12)
+    app.generate_json()
 
 if __name__ == "__main__":
     main()
