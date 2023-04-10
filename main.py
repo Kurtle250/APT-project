@@ -1,4 +1,4 @@
-from aptdecoder import AptDecoder
+from aptDecoder import AptDecoder
 
 
 def main():
@@ -6,7 +6,8 @@ def main():
     app = AptDecoder("data/signals/sample16.wav")
     #app.display_plot()
     app.display_image()
-    app.save_image(12)
+    app.save_image()
+    app.generate_json()
 
 if __name__ == "__main__":
     main()
