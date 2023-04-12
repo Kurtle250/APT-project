@@ -28,6 +28,7 @@ class AptDecoder(apt_data):
         self._hilbert()
         self._frame_image()
 
+
     def display_plot(self) -> None:
         """
         Displays plot of sampled audio signal
@@ -38,7 +39,6 @@ class AptDecoder(apt_data):
         plt.xlabel("Samples")
         plt.ylabel("Amplitude")
         plt.title("Signal")
-        plt.show()
 
     def _hilbert(self) -> None:
         """
@@ -68,31 +68,32 @@ class AptDecoder(apt_data):
             self.img.putpixel((px, py), (lum, lum, lum))
             px += 1
             if px >= w:
-                if (py % 50) == 0:
-                    print(f"Line saved {py} of {h}")
                 px = 0
                 py += 1
                 if py >= h:
                     break
-
+        print(f"finished decoding {self.wav_fh} ")
+        plt.imshow(self.img)
+        self._save_image()
     def display_image(self) -> None:
         """
         Display's image in matplot lib figure
         :return: None
         """
-        plt.imshow(self.img)
         plt.show()
 
-    def save_image(self) -> None:
+    def _save_image(self) -> None:
         """
         Save matplot figure as png
         :return: None
         """
-        self.img_fh = "data/images/"+ 'NOAA-19.png'
+        self.img_fh = "data/images/"+self.wav_fh.split('/')[2].split('.')[0]+".png"
         plt.savefig(self.img_fh)
 
-    def parse_wav_fh(self):
-        pass
     def generate_json(self):
+        """
+        Generating json output, which will be used for passing to db
+        :return: Json formatted apt schema for passing to db
+        """
         self.json_output = apt_data("2", "HHMMSS", ["XXXX", "XXXX", "XXXX"], "...", self.wav_fh, self.img_fh)
-        print(json.dumps(self.json_output.aptSchema))
+        return json.dumps(self.json_output.aptSchema)
