@@ -12,7 +12,7 @@ class AptDecoder(apt_data):
     # DSP parameters
     fs, data = None, list()
     data_crop = None
-    resample = 4
+    resample = 1
     # image parameters
     img = None
     img_fh = str()
@@ -23,8 +23,8 @@ class AptDecoder(apt_data):
         self.wav_fh = wav_fh
         self.fs, self.data = wav.read(wav_fh)
         self.data_crop = self.data[20 * self.fs:21 * self.fs]
-        self.data = self.data[::self.resample]
-        self.fs = self.fs // self.resample
+        # self.data = self.data[::self.resample]
+        # self.fs = self.fs // self.resample
         self._hilbert()
         self._frame_image()
 
@@ -49,7 +49,6 @@ class AptDecoder(apt_data):
         analytical_signal = signal.hilbert(self.data)
         amplitude_envelope = np.abs(analytical_signal)
         self.data = amplitude_envelope
-
     def _frame_image(self) -> None:
         """
         Transforms 1D np array in 2D image
@@ -57,22 +56,11 @@ class AptDecoder(apt_data):
         """
         frame_width = int(0.5 * self.fs)
         w, h = frame_width, self.data.shape[0] // frame_width
-        self.img = Image.new('RGB', (w, h))
-        px, py = 0, 0
-        for p in range(self.data.shape[0]):
-            lum = int(self.data[p] // 32 - 32)
-            if lum < 0:
-                lum = 0
-            if lum > 255:
-                lum = 255
-            self.img.putpixel((px, py), (lum, lum, lum))
-            px += 1
-            if px >= w:
-                px = 0
-                py += 1
-                if py >= h:
-                    break
+        self.data = self.data[:w * h] // 32 - 32
+        self.data = np.reshape(self.data, (h, w))
+        self.img = Image.fromarray(self.data)
         print(f"finished decoding {self.wav_fh} ")
+        self.img = self.img.resize((w, 3*h))
         plt.imshow(self.img)
         self._save_image()
     def display_image(self) -> None:
