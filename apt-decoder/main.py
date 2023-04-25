@@ -1,12 +1,13 @@
 
-from apt_decoder import apt_decoder
-
+from aptDecoder import AptDecoder
+from aptManager import aptManager
 
 def main():
-    app = apt_decoder("sample16.wav")
-    app.display_plot()
-    app.display_image()
+    #/home/kurt/downloads/jp1odj-air.proxy.kiwisdr.com_2023-04-07T03_19_00Z_137912.00_iq.wav
+    path = "data/signals/sample16-0.wav"
+    app = AptDecoder(path)
+
+    #app = aptManager("data/signals/*").createProcessPool()
 
 if __name__ == "__main__":
-
     main()

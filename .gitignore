@@ -52,5 +52,4 @@ dist
 **/*.dot
 **/*.ts
 **/*.mp4
-# project data
-data
+
