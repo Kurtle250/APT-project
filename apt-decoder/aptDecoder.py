@@ -12,7 +12,7 @@ class AptDecoder(apt_data):
     # DSP parameters
     fs, data = None, list()
     data_crop = None
-    resample = 4
+    resample = 1
     # image parameters
     img = None
     img_fh = str()
@@ -23,10 +23,11 @@ class AptDecoder(apt_data):
         self.wav_fh = wav_fh
         self.fs, self.data = wav.read(wav_fh)
         self.data_crop = self.data[20 * self.fs:21 * self.fs]
-        self.data = self.data[::self.resample]
-        self.fs = self.fs // self.resample
+        # self.data = self.data[::self.resample]
+        # self.fs = self.fs // self.resample
         self._hilbert()
         self._frame_image()
+
 
     def display_plot(self) -> None:
         """
@@ -38,7 +39,6 @@ class AptDecoder(apt_data):
         plt.xlabel("Samples")
         plt.ylabel("Amplitude")
         plt.title("Signal")
-        plt.show()
 
     def _hilbert(self) -> None:
         """
@@ -49,7 +49,6 @@ class AptDecoder(apt_data):
         analytical_signal = signal.hilbert(self.data)
         amplitude_envelope = np.abs(analytical_signal)
         self.data = amplitude_envelope
-
     def _frame_image(self) -> None:
         """
         Transforms 1D np array in 2D image
@@ -57,23 +56,14 @@ class AptDecoder(apt_data):
         """
         frame_width = int(0.5 * self.fs)
         w, h = frame_width, self.data.shape[0] // frame_width
-        self.img = Image.new('RGB', (w, h))
-        px, py = 0, 0
-        for p in range(self.data.shape[0]):
-            lum = int(self.data[p] // 32 - 32)
-            if lum < 0:
-                lum = 0
-            if lum > 255:
-                lum = 255
-            self.img.putpixel((px, py), (lum, lum, lum))
-            px += 1
-            if px >= w:
-                if (py % 50) == 0:
-                    print(f"Line saved {py} of {h}")
-                px = 0
-                py += 1
-                if py >= h:
-                    break
+        self.data = self.data[:w * h]//32 - 32
+        self.data = np.reshape(self.data, (h, w))
+        self.data = self.data.astype(np.uint8)
+        self.img = Image.fromarray(self.data)
+        print(f"finished decoding {self.wav_fh} ")
+        self.img = self.img.resize((w, 3*h))
+        self._save_image()
+        self.img.show()
 
     def display_image(self) -> None:
         """
@@ -83,16 +73,19 @@ class AptDecoder(apt_data):
         plt.imshow(self.img)
         plt.show()
 
-    def save_image(self) -> None:
+    def _save_image(self) -> None:
         """
         Save matplot figure as png
         :return: None
         """
-        self.img_fh = "data/images/"+ 'NOAA-19.png'
-        plt.savefig(self.img_fh)
+        self.img_fh = "data/images/"+self.wav_fh.split('/')[2].split('.')[0]+".png"
+        print(self.img_fh)
+        self.img.save(self.img_fh)
 
-    def parse_wav_fh(self):
-        pass
     def generate_json(self):
+        """
+        Generating json output, which will be used for passing to db
+        :return: Json formatted apt schema for passing to db
+        """
         self.json_output = apt_data("2", "HHMMSS", ["XXXX", "XXXX", "XXXX"], "...", self.wav_fh, self.img_fh)
-        print(json.dumps(self.json_output.aptSchema))
+        return json.dumps(self.json_output.aptSchema)
