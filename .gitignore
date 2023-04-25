@@ -52,13 +52,4 @@ dist
 **/*.dot
 **/*.ts
 **/*.mp4
-## CMake files && generated libraries
-**/*.so
-**/models
-**/data
-**/CMakeFiles
-**/cmake-build-debug
-**/build*
-**/bin
-# Doxygen generated files
-#docs/doxygen/html
+
