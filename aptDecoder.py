@@ -56,18 +56,21 @@ class AptDecoder(apt_data):
         """
         frame_width = int(0.5 * self.fs)
         w, h = frame_width, self.data.shape[0] // frame_width
-        self.data = self.data[:w * h] // 32 - 32
+        self.data = self.data[:w * h]//32 - 32
         self.data = np.reshape(self.data, (h, w))
+        self.data = self.data.astype(np.uint8)
         self.img = Image.fromarray(self.data)
         print(f"finished decoding {self.wav_fh} ")
         self.img = self.img.resize((w, 3*h))
-        plt.imshow(self.img)
         self._save_image()
+        self.img.show()
+
     def display_image(self) -> None:
         """
         Display's image in matplot lib figure
         :return: None
         """
+        plt.imshow(self.img)
         plt.show()
 
     def _save_image(self) -> None:
@@ -76,7 +79,8 @@ class AptDecoder(apt_data):
         :return: None
         """
         self.img_fh = "data/images/"+self.wav_fh.split('/')[2].split('.')[0]+".png"
-        plt.savefig(self.img_fh)
+        print(self.img_fh)
+        self.img.save(self.img_fh)
 
     def generate_json(self):
         """
