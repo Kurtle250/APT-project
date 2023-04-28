@@ -11,7 +11,7 @@ from aptDbSchema import apt_data
 class AptDecoder(apt_data):
     # DSP parameters
     fs, data = None, list()
-    data_crop = None
+
     resample = 1
     # image parameters
     img = None
@@ -22,20 +22,25 @@ class AptDecoder(apt_data):
     def __init__(self, wav_fh):
         self.wav_fh = wav_fh
         self.fs, self.data = wav.read(wav_fh)
-        self.data_crop = self.data[20 * self.fs:21 * self.fs]
-        # self.data = self.data[::self.resample]
-        # self.fs = self.fs // self.resample
+        self.data = self.data[::2]
+        self.fs = self.fs/2
+        #self._filter_data()
         self._hilbert()
         self._frame_image()
 
-
-    def display_plot(self) -> None:
+    def _filter_data(self,fc):
+        # Low-Pass Filter
+        taps = signal.firwin(numtaps=101, cutoff=fc, fs=self.fs)
+        self.data = np.convolve(signal[:, 0], taps, 'valid')
+        self.data = self.data[::2]
+        self.fs = self.fs/2
+    def display_plot(self,data_crop) -> None:
         """
         Displays plot of sampled audio signal
         :return: None
         """
         plt.figure(figsize=(12, 4))
-        plt.plot(self.data_crop)
+        plt.plot(data_crop)
         plt.xlabel("Samples")
         plt.ylabel("Amplitude")
         plt.title("Signal")
@@ -48,22 +53,22 @@ class AptDecoder(apt_data):
         """
         analytical_signal = signal.hilbert(self.data)
         amplitude_envelope = np.abs(analytical_signal)
-        self.data = amplitude_envelope
+        self.data = (amplitude_envelope/max(amplitude_envelope))*255
     def _frame_image(self) -> None:
         """
         Transforms 1D np array in 2D image
         :return: None
         """
+        self.data = self.data[2350:]
         frame_width = int(0.5 * self.fs)
         w, h = frame_width, self.data.shape[0] // frame_width
-        self.data = self.data[:w * h]//32 - 32
+        self.data = self.data[:w * h]
         self.data = np.reshape(self.data, (h, w))
         self.data = self.data.astype(np.uint8)
         self.img = Image.fromarray(self.data)
         print(f"finished decoding {self.wav_fh} ")
-        self.img = self.img.resize((w, 3*h))
+        self.img = self.img.resize((2*w, 3*h))
         self._save_image()
-        self.img.show()
 
     def display_image(self) -> None:
         """
