@@ -6,7 +6,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from PIL import Image
 import json
-from aptDbSchema import apt_data
+from database.db.aptDbSchema import apt_data
 
 class AptDecoder(apt_data):
     # DSP parameters
