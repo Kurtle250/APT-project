@@ -1,10 +1,10 @@
 # /database/db/database_writer.py
 import uuid
-from database.db.aptDbSchema import apt_data
+from database.db.db_apt_Schema import AptData
 
 
-def write_apt(data):
-    data_write = apt_data.create(
+def write_aptdata(data):
+    data_write = AptData.create(
         id=uuid.uuid4(),
         date=str(data['date']),
         loc=str(data['loc']),

@@ -1,8 +1,8 @@
 # /database/db/database_reader.py
-from database.db.aptDbSchema import apt_data
+from database.db.db_apt_Schema import AptData
 
 
-def read_aptData():
-    values = apt_data.objects()
+def read_aptdata():
+    values = AptData.objects()
     return values
 

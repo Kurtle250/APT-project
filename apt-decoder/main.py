@@ -7,7 +7,7 @@ def main():
     # path = 'data/signals/sample16-1.wav'
     # app = AptDecoder(path)
 
-    app = aptManager("data/signals/*").createProcessPool()
+    app = aptManager("../data/signals/*").createProcessPool()
 
 if __name__ == "__main__":
     main()

@@ -5,8 +5,6 @@ import logging
 from cassandra.cqlengine import connection
 from cassandra.cqlengine.management import sync_table
 
-# from cassandra.policies import DCAwareRoundRobinPolicy, TokenAwarePolicy
-
 LOGGING = "<cassandra_cluster.py>\t\t| "
 
 

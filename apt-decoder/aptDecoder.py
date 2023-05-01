@@ -6,9 +6,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 from PIL import Image
 import json
-from database.db.aptDbSchema import apt_data
+from database.db.db_apt_Schema import AptData
 
-class AptDecoder(apt_data):
+class AptDecoder(AptData):
     # DSP parameters
     fs, data = None, list()
 
@@ -92,5 +92,5 @@ class AptDecoder(apt_data):
         Generating json output, which will be used for passing to db
         :return: Json formatted apt schema for passing to db
         """
-        self.json_output = apt_data("2", "HHMMSS", ["XXXX", "XXXX", "XXXX"], "...", self.wav_fh, self.img_fh)
+        self.json_output = AptData("2", "HHMMSS", ["XXXX", "XXXX", "XXXX"], "...", self.wav_fh, self.img_fh)
         return json.dumps(self.json_output.aptSchema)
