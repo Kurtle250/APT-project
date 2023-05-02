@@ -14,9 +14,9 @@ LABEL authors="kurt"
 
 WORKDIR /usr/src/APT_app
 
-COPY .. .
+COPY ../.. .
 
-COPY .. /usr/src/APT_app
+COPY ../.. /usr/src/APT_app
 
 RUN pip install -r requirements.txt
 
