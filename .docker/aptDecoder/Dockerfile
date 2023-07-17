@@ -14,10 +14,8 @@ LABEL authors="kurt"
 
 WORKDIR /usr/src/APT_app
 
-COPY ../.. .
-
 COPY ../.. /usr/src/APT_app
 
 RUN pip install -r requirements.txt
 
-CMD bash
+CMD python /apt-decoder/main.py

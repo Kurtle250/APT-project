@@ -12,8 +12,8 @@ LOGGING = " <file_to_database.py> :: "
 
 """ Example configurations to run this file """
 APT_DATA = {
-    "model": 'apt_data',
-    "filepath": 'data/images/',
+    "model": 'decoder',
+    "filepath": '../../data/',
     "mode_type": 'json'
 }
 
@@ -92,34 +92,34 @@ class FileToDatabase:
         raise Exception(err_msg)
 
 
-if __name__ == "__main__":
-    setup_logging()
-    logging.getLogger('cassandra').setLevel(logging.WARNING)
-
-    import sys
-
-    args = None
-
-    if len(sys.argv) != 1:
-        logging.warning(f"{LOGGING} usage: sudo make database_load number_rows=100")
-        logging.warning(f"{LOGGING} usage: python3 {sys.argv[0]} <modality> <number_rows>")
-        logging.warning(f"{LOGGING} View configs: {sys.argv[0]}")
-        exit()
-
-    else:
-        print(f"Dataset not configured, check configs: {sys.argv[0]}")
-
-    logging.info(f"{LOGGING} args >> {args}")
-
-    logging.info("\n\n\n************************************ STARTING ************************************\n")
-    driver = FileToDatabase(
-        file_path=APT_DATA['filepath'], input_mode=APT_DATA['mode_type'], database_write_model=APT_DATA['model'])
-    driver.file_to_database()
-    logging.info("\n\n\n************************************ SUCCESS ************************************\n")
-    logging.info(
-        ">>>>>>>>>>>\n\nView changes to database with the following:\n"
-        "sudo make database_login\n\n"
-        "cassandra@cqlsh> select count(*) from sensor.ds_eo;\n"
-        "cassandra@cqlsh> select count(*) from sensor.ds_ir;\n"
-        "cassandra@cqlsh> select count(*) from fusion.features;\n\n"
-    )
+# if __name__ == "__main__":
+#     setup_logging()
+#     logging.getLogger('cassandra').setLevel(logging.WARNING)
+#
+#     import sys
+#
+#     args = None
+#
+#     if len(sys.argv) != 1:
+#         logging.warning(f"{LOGGING} usage: sudo make database_load number_rows=100")
+#         logging.warning(f"{LOGGING} usage: python3 {sys.argv[0]} <modality> <number_rows>")
+#         logging.warning(f"{LOGGING} View configs: {sys.argv[0]}")
+#         exit()
+#
+#     else:
+#         print(f"Dataset not configured, check configs: {sys.argv[0]}")
+#
+#     logging.info(f"{LOGGING} args >> {args}")
+#
+#     logging.info("\n\n\n************************************ STARTING ************************************\n")
+#     driver = FileToDatabase(
+#         file_path=APT_DATA['filepath'], input_mode=APT_DATA['mode_type'], database_write_model=APT_DATA['model'])
+#     driver.file_to_database()
+#     logging.info("\n\n\n************************************ SUCCESS ************************************\n")
+#     logging.info(
+#         ">>>>>>>>>>>\n\nView changes to database with the following:\n"
+#         "sudo make database_login\n\n"
+#         "cassandra@cqlsh> select count(*) from sensor.ds_eo;\n"
+#         "cassandra@cqlsh> select count(*) from sensor.ds_ir;\n"
+#         "cassandra@cqlsh> select count(*) from fusion.features;\n\n"
+#     )

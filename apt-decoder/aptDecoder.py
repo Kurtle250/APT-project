@@ -24,17 +24,20 @@ class AptDecoder(AptData):
         self.fs, self.data = wav.read(wav_fh)
         self.data = self.data[::2]
         self.fs = self.fs/2
-        #self._filter_data()
         self._hilbert()
         self._frame_image()
-
-    def _filter_data(self,fc):
+        print(self.generate_json_file())
+    def _filter_data(self,fc:int):
+        """
+        Preforms Low pass filter on  signal
+        :return: None
+        """
         # Low-Pass Filter
         taps = signal.firwin(numtaps=101, cutoff=fc, fs=self.fs)
         self.data = np.convolve(signal[:, 0], taps, 'valid')
         self.data = self.data[::2]
         self.fs = self.fs/2
-    def display_plot(self,data_crop) -> None:
+    def display_plot(self,data_crop:list) -> None:
         """
         Displays plot of sampled audio signal
         :return: None
@@ -83,14 +86,22 @@ class AptDecoder(AptData):
         Save matplot figure as png
         :return: None
         """
-        self.img_fh = "data/images/"+self.wav_fh.split('/')[2].split('.')[0]+".png"
+        self.img_fh = "../data/images/"+self.wav_fh.split('/')[2].split('.')[0]+".png"
         print(self.img_fh)
         self.img.save(self.img_fh)
 
-    def generate_json(self):
+    def generate_json_file(self):
         """
         Generating json output, which will be used for passing to db
         :return: Json formatted apt schema for passing to db
         """
-        self.json_output = AptData("2", "HHMMSS", ["XXXX", "XXXX", "XXXX"], "...", self.wav_fh, self.img_fh)
-        return json.dumps(self.json_output.aptSchema)
+        aptSchema = {
+            'id': "2",
+            'utc_time': "HHMMSS",
+            'location': ["XXX","XXX","XXX"],
+            'description':  "",
+            'wave_location':   self.wav_fh,
+            'image_location':  self.img_fh
+        }
+        with open("../data/tmp.json", "w") as fh:
+            fh.write(json.dumps(aptSchema))

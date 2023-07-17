@@ -1,5 +1,5 @@
 #################################################
-# Makefile to build x86 docker images
+# Makefile to build docker images
 #
 # EXAMPLE RUN COMMANDS
 # make build run
@@ -67,12 +67,23 @@ clean_all: clean
 
 #################################################
 # DEVELOPMENT HELPERS
+
+
+# DATABASE MANAGEMENT
 docker_login:
 	docker login
-
 image_push:
 	docker push "docker.io/$(REGISTRY_URL)/$(IMAGE_PREFIX)-database"
 db_login:
 	@echo "---- View .docker/database/README.md for useful commands --- "
 	@echo ""
 	docker exec -it database bash -c "cqlsh -u $(DB_USER) -p $(DB_PWD)"
+database_clear:
+	docker exec -it database bash -c "python3 database/database_clear.py $(ip)"
+database_load:
+	docker exec -it database bash -c "python3 database/db/file2db.py decoder $(number_rows)"
+
+	# FILE PERMISSIONS
+files:
+	chown -R ${USER}:${USER} data
+	chmod -R 777 data
