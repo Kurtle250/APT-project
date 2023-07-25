@@ -1,8 +1,8 @@
+import dataclasses
 import uuid
 from cassandra.cqlengine import columns
 from cassandra.cqlengine.columns import Text, UUID
 from cassandra.cqlengine.models import Model
-
 
 class AptData(Model):
     __keyspace__ = "decoder"
