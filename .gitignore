@@ -33,6 +33,7 @@ Thumbs.db
 .config
 .dbus
 .local
+data
 # Large media files
 *.mp4
 *.tiff
